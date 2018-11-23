@@ -1,28 +1,60 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
+import CardList from './components/CardList';
 import './App.css';
 
+import { getCars } from './actions/cars'
+
 class App extends Component {
+  state = {
+    cars: []
+  }
+  componentDidMount(){
+    this.props.getCars()
+  }
+
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.cars) !== JSON.stringify(this.props.cars)) {
+      this.setState({
+        cars: this.props.cars
+      })
+    }
+  }
+
+  handleSort = (e)=> {
+    const toSort = [...this.state.cars]
+    toSort.sort(function(a,b){
+      if(a[e.target.value] < b[e.target.value]) { return -1; }
+      if(a[e.target.value] > b[e.target.value]) { return 1; }
+      return 0;
+    });
+    this.setState({
+      cars: toSort
+    })
+  }
   render() {
+    const { cars } = this.state;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <div className="cardList">
+          {cars && <CardList handleSort={this.handleSort} cars={cars}/>}
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return { 
+    cars: state.cars.cars
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCars: () => dispatch(getCars())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -1,0 +1,3 @@
+export default {
+    FETCH_CARS_SUCCESS: "FETCH_CARS_SUCCESS"
+}

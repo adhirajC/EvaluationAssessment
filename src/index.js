@@ -1,10 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import ReduxToastr from 'react-redux-toastr'
 import './index.css';
 import App from './App';
+import configureStore from './store';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+
+const initialState = {};
+//const store = configureStore(initialState);
+const store = configureStore();
+ReactDOM.render(<Provider store={store}>
+<div>
+    <ReduxToastr
+      timeOut={4000}
+      closeOnToastrClick/>
+      <App />
+</div>
+
+</Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
